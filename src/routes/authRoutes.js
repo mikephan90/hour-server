@@ -6,10 +6,10 @@ const User = mongoose.model('User');
 const router = express.Router();
 
 router.post('/register', async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, username } = req.body;
 
     try {
-        const user = new User({ email, password });
+        const user = new User({ email, password, username });
         await user.save();
 
         const token = jwt.sign({ userId: user._id }, 'MY_SECRET_KEY');
@@ -20,15 +20,15 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/signin', async (req, res) => {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
 
-    if(!email || ! password) {
-        return res.status(422).send({error: 'Must provide email and password.' });
+    if(!username || !password) {
+        return res.status(422).send({ error: 'Must provide email and password.' });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) { 
-        return res.status(404).send({ error: 'Invalid password or email' });
+        return res.status(404).send({ error: 'Invalid username or password.' });
     }
 
     try { 
@@ -36,7 +36,7 @@ router.post('/signin', async (req, res) => {
         const token = jwt.sign({ userId: user._id}, 'MY_SECRET_KEY');
         res.send({ token });
     } catch (err) { 
-        return res.status(422).send({ error: 'Invalid password or email' });
+        return res.status(422).send({ error: 'Invalid username or password.a' });
     }
 });
 

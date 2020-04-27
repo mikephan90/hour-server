@@ -1,5 +1,5 @@
 require('./models/User');
-require('./models/Bookmarks');
+require('./models/Stores');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
